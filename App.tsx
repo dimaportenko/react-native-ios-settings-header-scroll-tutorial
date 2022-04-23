@@ -1,24 +1,25 @@
 import React, { FC } from "react";
 import {
+  Image,
   StyleSheet,
   Text,
-  View,
-  Image,
   useWindowDimensions,
+  View,
 } from "react-native";
 import {
   SafeAreaProvider,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 import Animated, {
-  useSharedValue,
   useAnimatedScrollHandler,
-  SharedValue,
-  interpolate,
-  useAnimatedStyle,
+  useSharedValue,
 } from "react-native-reanimated";
 
 import { colors } from "./colors";
+import { Spacer } from "./src/Spacer";
+import { Search } from "./src/Search";
+import { Header } from "./src/Header";
+import { Title } from "./src/Title";
 
 export default function App() {
   return (
@@ -29,58 +30,12 @@ export default function App() {
 }
 
 export const HEADER_HEIGHT = 40;
-
-export const Header: FC<{
-  position: SharedValue<number>;
-}> = ({ position }) => {
-  const { top } = useSafeAreaInsets();
-
-  const headerTitleStyle = useAnimatedStyle(() => {
-    const opacity = interpolate(
-      position.value,
-      [-10, HEADER_HEIGHT - 2, HEADER_HEIGHT],
-      [0, 0, 1]
-    );
-    return {
-      opacity,
-    };
-  });
-
-  return (
-    <View style={{ paddingTop: top, width: "100%" }}>
-      <View
-        style={{
-          height: HEADER_HEIGHT,
-          width: "100%",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Animated.Text
-          style={[
-            {
-              fontSize: 17,
-              fontWeight: "600",
-              letterSpacing: -0.41,
-            },
-            headerTitleStyle,
-          ]}
-        >
-          Settings
-        </Animated.Text>
-      </View>
-      <Animated.View
-        style={[{
-          width: "100%",
-          height: 1,
-          backgroundColor: "#ddd",
-        }, headerTitleStyle]}
-      />
-    </View>
-  );
-};
+export const TITLE_HEIGHT = 42;
+export const SEARCH_HEIGHT = 36;
+export const OFFSET = 8;
 
 export const AppContainer = () => {
+  const { top } = useSafeAreaInsets();
   const { width } = useWindowDimensions();
 
   const position = useSharedValue(0);
@@ -92,30 +47,57 @@ export const AppContainer = () => {
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.gray["600"] }}>
-      <Header position={position} />
-
       <Animated.ScrollView
         scrollEventThrottle={4}
         style={styles.container}
         onScroll={scrollHandler}
+        contentOffset={{x: 0, y: SEARCH_HEIGHT + OFFSET}}
       >
-        <View style={{ paddingHorizontal: 16 }}>
-          <Text style={styles.title}>Settings</Text>
-        </View>
-        <Spacer size={8} />
+        <Spacer
+          size={
+            OFFSET +
+            HEADER_HEIGHT +
+            SEARCH_HEIGHT +
+            TITLE_HEIGHT +
+            top +
+            2 * OFFSET
+          }
+        />
+
         <Image
           source={require("./assets/settings.jpg")}
           style={{ width, height: width * 3.1 }}
           resizeMode="contain"
         />
       </Animated.ScrollView>
+      <View
+        style={{
+          position: "absolute",
+          width: "100%",
+          top: 0,
+          flexDirection: "column-reverse",
+        }}
+      >
+        <Search position={position} searchHeight={SEARCH_HEIGHT} />
+
+        <Spacer size={OFFSET} />
+
+        <Title
+          position={position}
+          searchHeight={SEARCH_HEIGHT + OFFSET}
+          titleHeight={TITLE_HEIGHT}
+        />
+
+
+        <Header
+          position={position}
+          titleShowOffset={TITLE_HEIGHT + SEARCH_HEIGHT + OFFSET}
+          headerHeight={HEADER_HEIGHT}
+        />
+      </View>
     </View>
   );
 };
-
-export const Spacer: FC<{ size: number }> = ({ size }) => (
-  <View style={{ width: size, height: size }} />
-);
 
 const styles = StyleSheet.create({
   card: {

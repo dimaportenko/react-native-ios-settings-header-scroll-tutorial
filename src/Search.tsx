@@ -25,10 +25,18 @@ export const Search: FC<{
       [searchHeight, 0, 0],
       Extrapolation.CLAMP
     );
+    const translateY = interpolate(
+      position.value,
+      [0, -300],
+      [0, 300],
+      Extrapolation.CLAMP,
+    );
     return {
       height,
+      transform:[{translateY}]
     };
-  }, [position]);
+  }, [position, searchHeight]);
+
 
   return (
     <Animated.View

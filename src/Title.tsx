@@ -1,18 +1,16 @@
 import React, { FC } from "react";
-import {StyleSheet, Text, useWindowDimensions, View} from "react-native";
+import { StyleSheet, Text, useWindowDimensions, View } from "react-native";
 
 export const Title: FC<{
   titleHeight: number;
   searchHeight: number;
 }> = ({ titleHeight, searchHeight }) => {
-  const { width } = useWindowDimensions();
-
   return (
     <View
       style={[
+        styles.container,
         {
           height: titleHeight,
-          paddingHorizontal: 16,
         },
       ]}
     >
@@ -26,5 +24,8 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     fontSize: 34,
     lineHeight: 41,
+  },
+  container: {
+    paddingHorizontal: 16,
   },
 });

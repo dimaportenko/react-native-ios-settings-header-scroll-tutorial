@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import {
-  Image,
+  Image, ScrollView,
   StyleSheet,
   Text,
   useWindowDimensions,
@@ -10,10 +10,6 @@ import {
   SafeAreaProvider,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
-import Animated, {
-  useAnimatedScrollHandler,
-  useSharedValue,
-} from "react-native-reanimated";
 
 import { colors } from "./colors";
 import { Spacer } from "./src/Spacer";
@@ -38,19 +34,11 @@ export const AppContainer = () => {
   const { top } = useSafeAreaInsets();
   const { width } = useWindowDimensions();
 
-  const position = useSharedValue(0);
-  const scrollHandler = useAnimatedScrollHandler({
-    onScroll: (event) => {
-      position.value = event.contentOffset.y;
-    },
-  });
-
   return (
     <View style={{ flex: 1, backgroundColor: colors.gray["600"] }}>
-      <Animated.ScrollView
+      <ScrollView
         scrollEventThrottle={4}
         style={styles.container}
-        onScroll={scrollHandler}
         contentOffset={{x: 0, y: SEARCH_HEIGHT + OFFSET}}
       >
         <Spacer
@@ -69,7 +57,7 @@ export const AppContainer = () => {
           style={{ width, height: width * 3.1 }}
           resizeMode="contain"
         />
-      </Animated.ScrollView>
+      </ScrollView>
       <View
         style={{
           position: "absolute",
@@ -78,19 +66,17 @@ export const AppContainer = () => {
           flexDirection: "column-reverse",
         }}
       >
-        <Search position={position} searchHeight={SEARCH_HEIGHT} />
+        <Search searchHeight={SEARCH_HEIGHT} />
 
         <Spacer size={OFFSET} />
 
         <Title
-          position={position}
           searchHeight={SEARCH_HEIGHT + OFFSET}
           titleHeight={TITLE_HEIGHT}
         />
 
 
         <Header
-          position={position}
           titleShowOffset={TITLE_HEIGHT + SEARCH_HEIGHT + OFFSET}
           headerHeight={HEADER_HEIGHT}
         />

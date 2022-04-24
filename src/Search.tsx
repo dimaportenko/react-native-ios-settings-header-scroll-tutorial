@@ -1,45 +1,13 @@
 import { FC } from "react";
-import { Image, TextInput } from "react-native";
-import Animated, {
-  Extrapolation,
-  interpolate,
-  SharedValue,
-  useAnimatedStyle,
-} from "react-native-reanimated";
+import {Image, TextInput, View} from "react-native";
+
 
 export const Search: FC<{
-  position: SharedValue<number>;
   searchHeight: number;
-}> = ({ position, searchHeight }) => {
-  const titleStyle = useAnimatedStyle(() => {
-    const opacity = interpolate(position.value, [-10, 0, 4], [1, 1, 0]);
-    return {
-      opacity,
-    };
-  }, [position]);
-
-  const containerStyle = useAnimatedStyle(() => {
-    const height = interpolate(
-      position.value,
-      [0, searchHeight, 100],
-      [searchHeight, 0, 0],
-      Extrapolation.CLAMP
-    );
-    const translateY = interpolate(
-      position.value,
-      [0, -300],
-      [0, 300],
-      Extrapolation.CLAMP,
-    );
-    return {
-      height,
-      transform:[{translateY}]
-    };
-  }, [position, searchHeight]);
-
+}> = ({ searchHeight }) => {
 
   return (
-    <Animated.View
+    <View
       style={[
         {
           flex: 1,
@@ -48,17 +16,15 @@ export const Search: FC<{
           backgroundColor: "#E3E3E8",
           marginHorizontal: 16,
         },
-        containerStyle,
       ]}
     >
-      <Animated.View
+      <View
         style={[
           {
             flex: 1,
             flexDirection: "row",
             alignItems: "center",
           },
-          titleStyle,
         ]}
       >
         <Image
@@ -72,7 +38,7 @@ export const Search: FC<{
           }}
           placeholder="Search"
         />
-      </Animated.View>
-    </Animated.View>
+      </View>
+    </View>
   );
 };
